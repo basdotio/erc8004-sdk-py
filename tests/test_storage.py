@@ -159,3 +159,20 @@ def test_store_agent_profile_generates_expected_payload():
         ]
         assert payload["endpoints"][0]["name"] == "A2A"
 
+
+
+def test_agent_profile_emits_services_alongside_legacy_endpoints():
+    """The current ERC-8004 registration file names the list `services`; `endpoints` is the older name."""
+    profile = AgentProfile(
+        name="myAgentName",
+        description="A natural language description of the Agent",
+        image="https://example.com/agentimage.png",
+        endpoints=[AgentEndpoint(name="A2A", endpoint="https://agent.example/agent-card.json", version="0.3.0")],
+        registrations=[AgentRegistrationEntry(agent_id=22, agent_registry="eip155:1:0xRegistry")],
+    )
+
+    payload = profile.to_dict()
+
+    assert payload["services"] == payload["endpoints"]
+    assert payload["services"][0]["name"] == "A2A"
+    assert payload["services"] is not payload["endpoints"]

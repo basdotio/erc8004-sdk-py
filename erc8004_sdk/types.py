@@ -253,6 +253,9 @@ class AgentProfile:
         if self.image:
             data["image"] = self.image
 
+        # The current ERC-8004 registration file calls this list "services". "endpoints" is the
+        # name from the earlier draft and is kept so existing readers keep working.
+        data["services"] = [self._coerce_endpoint(entry) for entry in self.endpoints]
         data["endpoints"] = [self._coerce_endpoint(entry) for entry in self.endpoints]
         data["registrations"] = [
             self._coerce_registration(entry) for entry in self.registrations
